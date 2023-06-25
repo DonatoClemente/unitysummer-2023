@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D body;
     Animator animator;
     public float MAX_SPEED = 8f;
+    public int pickups = 0;
+
     Vector2 inputs;
     Vector2 velocity;
     Vector2 direction;
@@ -39,4 +42,22 @@ public class PlayerController : MonoBehaviour
     {
         body.velocity = velocity;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        GameObject gObject = collision.gameObject;
+        if (gObject.tag == "Pickup")
+        {
+            Destroy(gObject);
+            pickups++;
+            if (pickups == 5) quit();
+        }
+    }
+
+    private void quit()
+    {
+        if (UnityEditor.EditorApplication.isPlaying) UnityEditor.EditorApplication.isPlaying = false;
+        else Application.Quit();
+    }
+
 }
